@@ -1,0 +1,16 @@
+[project]
+name = "masksplat"
+description = "Splatfacto method with additional mask loss"
+version = "0.1.0"
+
+dependencies = ["nerfstudio >= 0.3.0"] 
+
+[tool.setuptools.packages.find]
+include = ["masksplat*"]
+
+# register the entry point of your new method here:
+[project.entry-points.'nerfstudio.method_configs']
+mask-splat = 'masksplat.method_config:method_config'
+
+[project.entry-points.'nerfstudio.dataparser_configs']
+bigs-blender = 'masksplat.dataparser_config:dataparser_config'

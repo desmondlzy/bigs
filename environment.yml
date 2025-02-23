@@ -1,0 +1,21 @@
+name: relight
+channels:
+  - pytorch
+  - conda-forge
+  - defaults
+dependencies:
+  - pip
+  - python=3.11
+  - pytorch=2.5
+  - torchvision
+  - torchmetrics
+  - cuda-toolkit=12.2
+  - ninja
+  - tqdm
+  - ffmpeg-python
+  - ffmpeg
+  - pip:
+    - nerfstudio
+    # - submodules/diff-gaussian-rasterization
+    - "--editable=git+https://github.com/NVlabs/tiny-cuda-nn/#subdirectory=bindings/torch"
+    - ./nsextension
