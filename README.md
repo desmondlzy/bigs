@@ -17,9 +17,12 @@ git clone git@github.com:desmondlzy/bigs.git && cd bigs
 conda env create -f environment.yml
 ```
 
+Download our OLAT data ([gdrive](https://drive.google.com/drive/folders/1CqgkRld2jSwTIzUE42cPAacsGFFIP_oo?usp=drive_link)), and optionally a pretrained bigs model if you want to skip the training.
+Right now only the dragon data is provided, more data will be released soon.
+
 ## Training
 
-Assume the data is already downloaded and unzipped into `data/bigs` directory
+Assume the data is already downloaded into `data/bigs` directory.
 
 The training has two steps: (1) train a normal Gaussian Splat model, preferrably using datasets with neutral lighting condition; (2) train the lighting components using OLAT data.
 
@@ -50,7 +53,7 @@ After running this script, the BiGS checkpoint can be found in `bigs-output/drag
 ## Relighting & Eval
 
 Then we load the trained BiGS model, and render it under a new lighting conditions.
-You could also skip the training step and use our pretrained model checkpoint (download here).
+You could also skip the training step and use our pretrained model [checkpoint](https://drive.google.com/drive/folders/1CqgkRld2jSwTIzUE42cPAacsGFFIP_oo?usp=drive_link).
 
 Run the `point_relight.py` for relighting with a point light source.
 You can find the rendered videos and a json file containing the metrics in the the output path directory after the script finishes.
