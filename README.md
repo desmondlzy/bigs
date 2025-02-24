@@ -32,11 +32,11 @@ You could also use `splatfacto` or other splatting methods by [writing your own 
 
 ```shell
 ns-train mask-splat \
-    --experiment-name dragon\
+    --experiment-name dragon \
     --pipeline.model.cull-alpha-thresh 0.005 \
-	--pipeline.model.random-scale 1.2 \
-	bigs-blender \
-	--data data/bigs/dragon/olat_all_on/
+    --pipeline.model.random-scale 1.2 \
+    bigs-blender \
+    --data data/bigs/dragon/olat_all_on
 ```
 
 _Step 2_: Invoke the training script for the relightablity training. On our nvidia A100 GPU, training 100K iteration takes around 1.5 hours to complete.
@@ -44,8 +44,8 @@ _Step 2_: Invoke the training script for the relightablity training. On our nvid
 ```shell
 python scripts/training.py \
     --dataset-root data/bigs/dragon \
-	--ns-gaussian-config outputs/dragon/mask-splat/<config-path>/config.yml \
-	--output-path ./bigs-output/dragon/training
+    --ns-gaussian-config outputs/dragon/mask-splat/<config-path>/config.yml \
+    --output-path ./bigs-output/dragon/training
 ```
 
 After running this script, the BiGS checkpoint can be found in `bigs-output/dragon/training` directory, named with `model_{iter}.pth`.
@@ -59,9 +59,9 @@ Run the `point_relight.py` for relighting with a point light source.
 You can find the rendered videos and a json file containing the metrics in the the output path directory after the script finishes.
 ```shell
 python scripts/point_relight.py \
-	--dataset-root data/bigs/dragon \
-	--checkpoint-path ./bigs-output/dragon/training/model_100000.pth \
-	--output-path ./bigs-output/dragon/point-relight
+    --dataset-root data/bigs/dragon \
+    --checkpoint-path ./bigs-output/dragon/training/model_100000.pth \
+    --output-path ./bigs-output/dragon/point-relight
 ```
 
 Run the `envmap_relight.py` for relighting with an environment map. An example envmap is provided in `data/envmaps/gear-store.exr`.
@@ -69,9 +69,9 @@ You can find the rendered videos in the the output path directory after the scri
 ```shell
 python scripts/envmap_relight.py \
     --dataset-root data/bigs/dragon \
-	--checkpoint-path bigs-output/dragon/training/model_100000.pth \
-	--output-path bigs-output/dragon/envmap-relight \
-	--envmap data/envmaps/gear-store.exr
+    --checkpoint-path bigs-output/dragon/training/model_100000.pth \
+    --output-path bigs-output/dragon/envmap-relight \
+    --envmap data/envmaps/gear-store.exr
 ```
 
 ## Acknowledgments
