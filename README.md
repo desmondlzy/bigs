@@ -4,7 +4,7 @@
 
 Code release for _BiGS: Bidirectional Primitives for Relightable 3D Gaussian Splatting_, 3D Vision 2025; Liu Zhenyuan, Guo Yu, Xinyuan Li, Bernd Bickel, Ran Zhang.
 
-Train relightable Gaussian splats with OLAT (one-light-a-time) datasets, and relight with environmet maps and point lights in real time.
+Train relightable Gaussian splats with OLAT (one-light-a-time) datasets, and relight with environment maps and point lights in real time.
 
 For more details, check out our [project page](https://desmondlzy.me/publications/bigs/) and our [paper](https://www.arxiv.org/abs/2408.13370).
 
@@ -17,10 +17,21 @@ git clone git@github.com:desmondlzy/bigs.git && cd bigs
 conda env create -f environment.yml
 ```
 
-Download our OLAT data ([gdrive](https://drive.google.com/drive/folders/1CqgkRld2jSwTIzUE42cPAacsGFFIP_oo?usp=drive_link)), and optionally a pretrained bigs model if you want to skip the training.
-Right now only the dragon data is provided, more data will be released soon.
 
 ## Training
+
+Download our OLAT data ([gdrive](https://drive.google.com/drive/folders/1CqgkRld2jSwTIzUE42cPAacsGFFIP_oo?usp=drive_link), or [huggingface](https://huggingface.co/datasets/desmondlzy/bigs-data)), and optionally a pretrained bigs model ([gdrive](https://drive.google.com/drive/folders/1CqgkRld2jSwTIzUE42cPAacsGFFIP_oo?usp=drive_link)) if you want to skip the training.
+
+The whole dataset takes around 17 GB of disk space. Huggingface download can be made with 
+```bash
+huggingface-cli download --repo-type=dataset desmondlzy/bigs-data --local-dir data/bigs
+```
+
+Alternatively, you may only download one scene via the `--include` option. The scene names can be found [here](https://huggingface.co/datasets/desmondlzy/bigs-data/tree/main).
+```bash
+# downloading the `dragon` scene
+huggingface-cli download --repo-type=dataset desmondlzy/bigs-data --include "dragon/*" --local-dir data/bigs
+```
 
 Assume the data is already downloaded into `data/bigs` directory.
 
@@ -39,7 +50,7 @@ ns-train mask-splat \
     --data data/bigs/dragon/olat_all_on
 ```
 
-_Step 2_: Invoke the training script for the relightablity training. On our nvidia A100 GPU, training 100K iteration takes around 1.5 hours to complete.
+_Step 2_: Invoke the training script for the relightablity training. On our Nvidia A100 GPU, training 100K iteration takes around 1.5 hours to complete.
 
 ```shell
 python scripts/training.py \
