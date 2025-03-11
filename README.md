@@ -18,22 +18,36 @@ conda env create -f environment.yml
 ```
 
 
+## Relight Pretrained Models
+
+A simple one liner will call `point_relight.py` and it does all the dirty work for you, like fetching the data and checkpoints from huggingface. 
+Just have a coffee and wait for the relight results being produced into `--output-path`.
+```bash
+python scripts/point_relight.py --use-pretrained dragon-100000 --output-path bigs-outputs
+```
+
+Similarly, `envmap_relight.py` can also run with a pretrained model.
+```bash
+python scripts/envmap_relight.py --use-pretrained dragon-100000 --output-path bigs-outputs
+```
+
+
 ## Training
 
-Download our OLAT data ([gdrive](https://drive.google.com/drive/folders/1CqgkRld2jSwTIzUE42cPAacsGFFIP_oo?usp=drive_link), or [huggingface](https://huggingface.co/datasets/desmondlzy/bigs-data)), and optionally a pretrained bigs model ([gdrive](https://drive.google.com/drive/folders/1CqgkRld2jSwTIzUE42cPAacsGFFIP_oo?usp=drive_link)) if you want to skip the training.
+Download our OLAT data ([huggingface](https://huggingface.co/datasets/desmondlzy/bigs-data)) into `data/bigs`.
 
 The whole dataset takes around 17 GB of disk space. Huggingface download can be made with 
 ```bash
 huggingface-cli download --repo-type=dataset desmondlzy/bigs-data --local-dir data/bigs
 ```
 
-Alternatively, you may only download one scene via the `--include` option. The scene names can be found [here](https://huggingface.co/datasets/desmondlzy/bigs-data/tree/main).
+Alternatively, you may only download one scene via the `--include` option. The scene names can be found as the folder names in the [repo](https://huggingface.co/datasets/desmondlzy/bigs-data/tree/main).
 ```bash
 # downloading the `dragon` scene
 huggingface-cli download --repo-type=dataset desmondlzy/bigs-data --include "dragon/*" --local-dir data/bigs
 ```
 
-Assume the data is already downloaded into `data/bigs` directory.
+You should be able to see the folders with scene names in the `data/bigs` directory.
 
 The training has two steps: (1) train a normal Gaussian Splat model, preferrably using datasets with neutral lighting condition; (2) train the lighting components using OLAT data.
 
@@ -63,8 +77,7 @@ After running this script, the BiGS checkpoint can be found in `bigs-output/drag
 
 ## Relighting & Eval
 
-Then we load the trained BiGS model, and render it under a new lighting conditions.
-You could also skip the training step and use our pretrained model [checkpoint](https://drive.google.com/drive/folders/1CqgkRld2jSwTIzUE42cPAacsGFFIP_oo?usp=drive_link).
+Then we load the trained BiGS model, and render it under a new lighting conditions. You can also run these scripts with pretrained models as described [above](#relight-pretrained-models).
 
 Run the `point_relight.py` for relighting with a point light source.
 You can find the rendered videos and a json file containing the metrics in the the output path directory after the script finishes.

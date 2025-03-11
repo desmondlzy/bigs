@@ -18,14 +18,16 @@ from relight.render_bigs_with_point_light import render_bigs_with_point_light
 from relight.bigs_olat_dataset import get_bigs_olat_dataset
 from relight.render_splats import render_splats
 from relight.upper_to_symmetric import upper_to_symmetric
+from load_pretrained_and_set_args import load_pretrained_and_set_args
 
 
 @dataclass
 class EnvmapRelightArgs:
-	dataset_root: Path
-	checkpoint_path: Path
 	output_path: Path
+	dataset_root: Path = Path(__file__).parent.parent / "data/bigs/dragon"
+	checkpoint_path: Path = Path("")
 	envmap: Path = Path(__file__).parent.parent / "data/envmaps/gear-store.exr"
+	use_pretrained: str | None = None
 
 
 identifier_str = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
@@ -41,6 +43,9 @@ if in_ipython:
 else:
 	import tyro
 	args = tyro.cli(EnvmapRelightArgs)
+
+if args.use_pretrained:
+	load_pretrained_and_set_args(args)
 
 args.output_path.mkdir(exist_ok=True, parents=True)
 
@@ -89,15 +94,6 @@ train_dataset = get_bigs_olat_dataset(
 	root=args.dataset_root,
 	light_ids=train_light_ids,
 	camera_ids=[0],	
-	load_masks=True,
-	background=background,
-	light_intensity_factor=light_intensity_factor,
-	scale_factor=scale_factor,
-)
-test_dataset = get_bigs_olat_dataset(
-	root=args.dataset_root,
-	light_ids=test_light_ids,
-	camera_ids=None,
 	load_masks=True,
 	background=background,
 	light_intensity_factor=light_intensity_factor,

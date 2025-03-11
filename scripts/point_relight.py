@@ -20,6 +20,8 @@ from relight.bigs import BiGS, init_bigs_from_state_dict
 from relight.ssim import ssim
 from relight.plot_results import plot_results
 from relight.make_video import make_video
+from load_pretrained_and_set_args import load_pretrained_and_set_args
+
 
 
 #%%
@@ -29,10 +31,10 @@ evaluate on test set
 
 @dataclass
 class PointRelightArgs:
-	dataset_root: Path
-	checkpoint_path: Path
 	output_path: Path
-	autoload_checkpoint = False
+	dataset_root: Path = Path(__file__).parent.parent / "data/bigs/dragon"
+	checkpoint_path: Path = Path("")
+	use_pretrained: str | None = None
 
 
 identifier_str = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
@@ -50,7 +52,11 @@ else:
 	import tyro
 	args = tyro.cli(PointRelightArgs)
 
+if args.use_pretrained:
+	load_pretrained_and_set_args(args)
+
 args.output_path.mkdir(exist_ok=True, parents=True)
+
 
 background = torch.tensor([0.0, 0.0, 0.0])
 test_light_ids = [i for i in range(41, 99)]
@@ -105,7 +111,7 @@ for nm, dataset in [("train", train_dataset), ("test", test_dataset)]:
 
 	for index, datapoint in tqdm(enumerate(dataset), total=len(dataset)):
 		light = datapoint["light"]
-		light_pos = light["position"].cuda() * torch.tensor([-1.0, 1.0, -1.0], device="cuda")
+		light_pos = light["position"].cuda() * flip_with
 		camera = dict_to_camera(datapoint)
 
 		results = render_bigs_with_point_light(
@@ -148,16 +154,18 @@ for nm, dataset in [("train", train_dataset), ("test", test_dataset)]:
 	ssim_val = np.mean(ssim_items)
 	lpip_val = np.mean(lpip_items)
 
+	print("split:", nm)
 	print("psnr:", psnr_val)
 	print("ssim:", ssim_val)
 	print("lpip:", lpip_val)
 
 	# write metrics to json
 	metrics = {
-		"psnr": psnr_val,
-		"ssim": ssim_val,
-		"lpip": lpip_val,
+		"psnr": float(psnr_val),
+		"ssim": float(ssim_val),
+		"lpip": float(lpip_val),
 	}
+
 	with open(args.output_path / f"{identifier_str}_{nm}_metrics.json", "w") as f:
 		json.dump(metrics, f)
 
