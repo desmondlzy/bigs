@@ -25,7 +25,7 @@ from datetime import datetime
 print(f"current time: {datetime.now().isoformat()}")
 
 #%%
-from nsextension.masksplat.mask_splat import MaskSplats, MaskSplats
+from masksplat.mask_splat import MaskSplat, MaskSplatConfig
 from nerfstudio.utils.eval_utils import eval_setup
 
 from IPython import get_ipython
@@ -79,7 +79,7 @@ def load_splats_model(nerfstudio_config_path):
 	config_path = Path(nerfstudio_config_path)  # gaussian-splat + alpha = 1
 	ns_config, pipeline, checkpoint_path, step = eval_setup(config_path)
 
-	splats: MaskSplats = pipeline.model
+	splats: MaskSplat = pipeline.model
 
 	return pipeline, splats
 
